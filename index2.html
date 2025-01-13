@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>영화 검색</h1>
+      <input type="text" id="searchInput" placeholder="영화를 검색하세요..." />
+      <button class="btn">검색</button>
+      <h4>북마크 보기</h4>
+    </header>
+    <main>
+      <ul id="movies"></ul>
+      <div id="modal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h2 id="modal-title">제목</h2>
+          <p id="modal-body">내용</p>
+        </div>
+      </div>
+    </main>
+    <script src="./main2.js"></script>
+  </body>
+</html>
