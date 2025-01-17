@@ -16,7 +16,9 @@ const cardSection = document.querySelector(".cards");
 const modalSection = document.querySelector(".modal-content");
 
 let postArray = [];
-// console.log(postArray); // 빈 배열인 게 맞으며, 지금 수준에서는 확인하기 어려움
+
+// // console.log(postArray); // 빈 배열인 게 맞으며, 지금 수준에서는 확인하기 어려움
+// import { fetchData } from "./api,js";
 
 async function fetchData() {
   try {
@@ -45,9 +47,11 @@ function displayPost(posts) {
     <div data-id="${posts[i].id}" class="mvCard">
          <img id="poster" src="${
            baseImgUrl + posts[i].poster_path
-         } class="card-img-top alt="poster">
-         <p>${posts[i].title}</p>
-         <p>평점: ${posts[i].vote_average}<span id="mvaver"></span></p>
+         } class="card-img-top" alt="poster">
+         <p class="cdtitle">${posts[i].title}</p>
+         <p class="cdaver">🍿 ${
+           posts[i].vote_average
+         }<span id="mvaver"></span></p>
     </div>`;
   }
   cardSection.innerHTML = temp_html;
@@ -57,7 +61,7 @@ function displayPost(posts) {
 function searchMV() {
   const keyword = searchInput.value;
 
-  const filterPosts = postArray.filter(function (영화) {
+  const filterPosts = postArray.filter((영화) => {
     return 영화.title.includes(keyword);
   });
   console.log(filterPosts);
@@ -74,61 +78,81 @@ function enterkey() {
 // [모달창 내용 함수]
 function displayModal(info) {
   temp_modal = `<div data-id="${info.id}" class="modalCard">
-         <img id="poster" src="${
+         <img id="mdPoster" src="${
            baseImgUrl + info.poster_path
-         } class="card-img-top alt="poster">
-         <h1>${info.title}</h1>
-         <p>${info.overview}</p>
-         <h3>평점: ${info.vote_average}<span id="mvaver"></span></h3>
+         } class="modal-img-top" alt="poster">
+         <div class="bottomWrap">
+         <h1 class="mdtitle">${info.title}</h1>
+         <p class="mdcontent">${info.overview}</p>
+         <h3>🍿 ${info.vote_average}<span id="mvaver"></span></h3>
          <span class="close">&times;</span>
-         <button class="book">북마크 추가</button>
+         <button class="mdbookBtn">북마크 추가</button>
+         </div>
     </div>`;
 
   modalSection.innerHTML = "";
   modalSection.insertAdjacentHTML("afterbegin", temp_modal);
 }
 
-// [북마크 기능]
-// function addBookmark(displayModal) {
-//   const bookmarks = getBookmarks()
-//   if (bookmarks.some((처리할 배열 내 현재 요소) => 비교할내용 === 비교대상)){
-//     bookmarks.push(추가할요소)
-//     localStorage.setItem("bookmarks", JSON.stringify(bookmarks))
-//   }
-
-// }
+// 로컬스토리지 bookmarklist 초기화
+let bookmarkedList = localStorage.getItem("bookmarklist") || [];
 
 //[모달창 이벤트리스너]
-modal.addEventListener("click", function (e) {
+modal.addEventListener("click", (e) => {
+  // 모달창 닫기
   e.target.classList.contains("close")
     ? ((modal.style.display = "none"),
       (document.body.style.overflow = "scroll"))
     : null;
 
-  (modal.style.display = "block") &&
-  e.target.classList.contains(!"modal-content")
-    ? (modal.style.display = "none")
+  // 모달창 ID 로컬 스토리지에 추가 start-->
+  const modalCard = e.target.closest(".modalCard");
+  const modalID = modalCard.getAttribute("data-id");
+  // <--end.
+
+  e.target.classList.contains("mdbookBtn")
+    ? swal("북마크에 추가되었습니다!")
     : null;
-
-  e.target.classList.contains("book") ? alert("북마크 추가") : null;
-
-  console.log(e.target);
 });
 
 // [모달창 띄우기 및 내용 구성]
 // data-id를 가져오기 (변수 선언)
 // postArray의 id와 cardId 비교하기 (find메서드)
-cardSection.addEventListener("click", function (e) {
+cardSection.addEventListener("click", (e) => {
   const mvCard = e.target.closest(".mvCard");
-  // console.log(mvCard);
+  if (!mvCard) {
+    return;
+  }
+
   const cardID = mvCard.getAttribute("data-id");
   console.log(cardID);
 
-  const clickModal = postArray.find(function (postArray) {
+  const clickModal = postArray.find((postArray) => {
     return Number(postArray.id) === Number(cardID);
   });
   console.log(clickModal);
   displayModal(clickModal);
+
+  const modalBookmarkBtn = document.querySelector(".mdbookBtn");
+
+  // 모달창 내 북마크 버튼 클릭 시, 영화 정보 로컬스토리지 저장
+  modalBookmarkBtn.addEventListener("click", () => {
+    bookmarkedList.push(clickModal);
+    localStorage.setItem("bookmarklist", JSON.stringify(bookmarkedList));
+  });
+
   modal.style.display = "block";
   document.body.style.overflow = "hidden";
+});
+
+// 북마크 보기 버튼 이벤트리스너
+bookBtn.addEventListener("click", () => {
+  function getBookmarks(modalID) {
+    const localData = JSON.parse(localStorage.getItem(modalID));
+
+    // 로컬스토리지에서 가져온 id로 api 넣기
+    for (let i = 0; i < localStorage.length; i++) {
+      displayPost(localData[i]);
+    }
+  }
 });

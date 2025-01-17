@@ -3,19 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="./style.css" />
+    <title>FYM</title>
+    <link rel="stylesheet" href="./src/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Diphylleia&family=Do+Hyeon&family=Dongle&family=Gowun+Batang:wght@700&family=Gowun+Dodum&family=Grandiflora+One&family=Orbit&display=swap"
+      rel="stylesheet"
+    />
+    /> />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   </head>
   <body>
     <header>
-      <h1>영화 검색</h1>
+      <h1 class="mainicon">🎥 🔍</h1>
+      <h1 class="maintitle">
+        <span class="F">F</span>ind <span class="F">Y</span>our
+        <span class="F">M</span>ovie !
+      </h1>
       <input
         type="text"
         id="searchInput"
+        class="inputst"
         onkeyup="enterkey();"
-        placeholder="영화를 검색하세요..."
+        placeholder="영화를 검색하세요."
       />
-      <button>북마크 보기</button>
+      <button class="bookBtn">북마크 보기</button>
     </header>
     <main>
       <div class="cards"></div>
@@ -25,6 +38,6 @@
       </div>
       <!-- 모달 화면 end -->
     </main>
-    <script src="./main.js"></script>
+    <script src="./src/JS/main.js""></script>
   </body>
 </html>
